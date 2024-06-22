@@ -11,6 +11,7 @@ namespace LoanInterestSystem.Server.Controllers
     public class LoansController : ControllerBase
     {
         private readonly IClientRepository _clientRepository;
+        private const decimal PrimeInterestRate = 1.5m; // Prime interest rate is given as 1.5%
 
         public LoansController(IClientRepository clientRepository)
         {
@@ -25,7 +26,7 @@ namespace LoanInterestSystem.Server.Controllers
             if (client == null) return NotFound("Client not found");
 
             var strategy = InterestStrategyFactory.GetStrategy(client.Age);
-            var totalAmount = strategy.CalculateInterest(request.Amount, request.PeriodInMonths, 0);
+            var totalAmount = strategy.CalculateInterest(request.Amount, request.PeriodInMonths, PrimeInterestRate);
 
             return new LoanResponse { TotalAmount = totalAmount };
         }
